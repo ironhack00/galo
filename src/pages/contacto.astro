@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactSection from '../components/ContactSection.astro';
+import { site } from '../data/site.js';
+---
+<Base title="Contacto" description="Contactá a GALO Marketing. Puerto Rico, Misiones. Escribinos y empecemos a crear estrategias que generan impacto.">
+  <section class="page-hero glow section">
+    <div class="container center" data-reveal>
+      <p class="eyebrow">Estamos para ayudarte</p>
+      <h1 class="h-hero">Hagamos que las cosas pasen</h1>
+      <p class="lead" style="margin-inline:auto">Contáctanos y empecemos a crear estrategias que generan impacto.</p>
+      <div class="page-hero__cta">
+        <a class="btn btn-green" href={`https://wa.me/${site.phoneRaw}`} target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn btn-ghost" href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
+    </div>
+  </section>
+
+  <ContactSection />
+</Base>
+
+<style>
+  .page-hero { padding-block: clamp(3rem, 8vw, 6rem) clamp(1rem, 3vw, 2rem); }
+  .page-hero .h-hero { margin: .8rem 0 1rem; }
+  .page-hero__cta { display: flex; gap: .8rem; justify-content: center; flex-wrap: wrap; margin-top: 1.6rem; }
+</style>

@@ -1,0 +1,96 @@
+---
+import { site } from '../data/site.js';
+const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(site.mapQuery)}&output=embed`;
+---
+<section class="contact section section--light" id="contacto" aria-labelledby="contact-h">
+  <div class="container">
+    <h2 class="h-section center contact__head" id="contact-h" data-reveal>Donde encontrarnos</h2>
+
+    <div class="contact__top" data-reveal>
+      <div class="contact__intro">
+        <p class="eyebrow eyebrow--green">Contáctanos</p>
+        <h3 class="h-sub contact__title">Trabajemos juntos</h3>
+      </div>
+      <ul class="contact__info">
+        <li>{site.address}</li>
+        <li><a href={`tel:${site.phoneRaw}`}>{site.phone}</a></li>
+        <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+      </ul>
+    </div>
+
+    <form class="contact__form" id="contact-form" data-reveal novalidate>
+      <p class="eyebrow eyebrow--green form__legend">Formulario de consultas</p>
+      <div class="form__row">
+        <input type="email" name="email" placeholder="Email" autocomplete="email" required />
+        <input type="tel" name="telefono" placeholder="Teléfono" autocomplete="tel" />
+      </div>
+      <input type="text" name="nombre" placeholder="Nombre y Apellido" autocomplete="name" required />
+      <textarea name="mensaje" placeholder="Mensaje" rows="5" required></textarea>
+      <button type="submit" class="btn btn-green form__submit">Enviar</button>
+      <p class="form__hint">Al enviar, se abrirá WhatsApp con tu consulta lista para mandar.</p>
+    </form>
+
+    <div class="contact__map" data-reveal>
+      <iframe
+        src={mapSrc}
+        title={`Ubicación de ${site.name} en el mapa`}
+        loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        style="border:0" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact__head { color: var(--green-deep); margin-bottom: clamp(1.5rem, 4vw, 2.5rem); }
+  .eyebrow--green { color: var(--green); }
+
+  .contact__top {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+    align-items: start; margin-bottom: 2rem;
+  }
+  .contact__title { color: var(--ink); }
+  .contact__info { display: grid; gap: .55rem; color: #3c463f; font-weight: 500; }
+  .contact__info a { transition: color .2s ease; }
+  .contact__info a:hover { color: var(--green); }
+
+  .contact__form { display: grid; gap: 1rem; margin-bottom: 2.5rem; }
+  .form__legend { margin-bottom: .2rem; }
+  .form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .contact__form input,
+  .contact__form textarea {
+    width: 100%; font: inherit; color: var(--ink);
+    background: #f0f1f0; border: 1.5px solid transparent; border-radius: 12px;
+    padding: .95rem 1.1rem; transition: border-color .2s ease, background .2s ease;
+  }
+  .contact__form input::placeholder,
+  .contact__form textarea::placeholder { color: #8b948d; }
+  .contact__form input:focus,
+  .contact__form textarea:focus { outline: none; border-color: var(--green); background: #fff; }
+  .contact__form textarea { resize: vertical; min-height: 120px; }
+  .form__submit { justify-self: start; padding-inline: 2.4rem; }
+  .form__hint { font-size: .82rem; color: var(--muted-light); }
+
+  .contact__map { border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-card); }
+  .contact__map iframe { width: 100%; height: clamp(280px, 42vw, 440px); display: block; }
+
+  @media (max-width: 720px) {
+    .contact__top { grid-template-columns: 1fr; gap: 1rem; }
+    .form__row { grid-template-columns: 1fr; }
+    .form__submit { justify-self: stretch; text-align: center; justify-content: center; }
+  }
+</style>
+
+<script is:inline define:vars={{ phone: site.phoneRaw }}>
+  const form = document.getElementById('contact-form');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    const d = new FormData(form);
+    const msg =
+      `Hola GALO Marketing! Soy ${d.get('nombre') || ''}.%0A` +
+      `Email: ${d.get('email') || ''}%0A` +
+      `Teléfono: ${d.get('telefono') || '-'}%0A%0A` +
+      `${d.get('mensaje') || ''}`;
+    window.open(`https://wa.me/${phone}?text=${msg}`, '_blank', 'noopener');
+  });
+</script>

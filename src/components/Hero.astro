@@ -1,0 +1,114 @@
+---
+import { heroSlides } from '../data/site.js';
+---
+<section class="hero" aria-label="Presentación">
+  <div class="hero__bgglow" aria-hidden="true"></div>
+  <div class="container">
+    <div class="hero__viewport">
+      {heroSlides.map((s, i) => (
+        <article class:list={['hero__slide', { 'is-active': i === 0 }]} data-slide={i} aria-hidden={i !== 0}>
+          <div class="hero__text">
+            {s.eyebrow && <p class="eyebrow">{s.eyebrow}</p>}
+            <h1 class="h-hero">{s.title}</h1>
+            <p class="lead">{s.text}</p>
+            <div class="hero__cta">
+              <a class="btn btn-green" href="/contacto/">Trabajemos juntos</a>
+              <a class="btn btn-ghost" href="/#servicios">Ver servicios</a>
+            </div>
+          </div>
+          <figure class="hero__fig glow">
+            <img src={s.img} alt={s.alt} width="820" height="560"
+                 loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : 'auto'} decoding="async" />
+          </figure>
+        </article>
+      ))}
+    </div>
+
+    <div class="hero__dots" role="tablist" aria-label="Cambiar diapositiva">
+      {heroSlides.map((_, i) => (
+        <button class:list={['dot', { 'is-active': i === 0 }]} data-dot={i}
+                role="tab" aria-selected={i === 0} aria-label={`Diapositiva ${i + 1}`}></button>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; overflow: hidden; padding-block: clamp(2rem, 5vw, 4rem) clamp(2.5rem, 5vw, 3.5rem); }
+  .hero__bgglow {
+    position: absolute; right: -8%; top: 22%; width: 60vw; height: 60vw; max-width: 720px; max-height: 720px;
+    background: radial-gradient(closest-side, rgba(35,161,43,.28), transparent 70%);
+    z-index: 0; pointer-events: none;
+  }
+  .hero__viewport { position: relative; }
+
+  .hero__slide {
+    display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: clamp(1rem, 4vw, 3rem);
+    position: absolute; inset: 0; opacity: 0; visibility: hidden;
+    transform: translateY(10px); transition: opacity .55s ease, transform .55s ease;
+    pointer-events: none;
+  }
+  .hero__slide.is-active { position: relative; opacity: 1; visibility: visible; transform: none; pointer-events: auto; }
+
+  .hero__text .eyebrow { margin-bottom: .9rem; }
+  .hero__text .h-hero { margin-bottom: 1.1rem; }
+  .hero__text .lead { margin-bottom: 1.8rem; }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: .8rem; }
+
+  .hero__fig { margin: 0; display: grid; place-items: center; }
+  .hero__fig img { width: 100%; max-width: 560px; height: auto; filter: drop-shadow(0 30px 40px rgba(0,0,0,.5)); animation: float 6s ease-in-out infinite; }
+  @keyframes float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-14px) } }
+  @media (prefers-reduced-motion: reduce) { .hero__fig img { animation: none; } }
+
+  .hero__dots { display: flex; gap: .6rem; justify-content: flex-start; margin-top: 1.5rem; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; border: 0; background: rgba(255,255,255,.28); transition: background .25s ease, width .25s ease; }
+  .dot.is-active { background: var(--green-bright); width: 30px; border-radius: 6px; }
+
+  @media (max-width: 860px) {
+    .hero__slide { grid-template-columns: 1fr; text-align: center; gap: 1.5rem; }
+    .hero__text { display: flex; flex-direction: column; align-items: center; order: 1; }
+    .hero__text .lead { margin-inline: auto; }
+    .hero__fig { order: 2; }
+    .hero__cta { justify-content: center; }
+    .hero__dots { justify-content: center; }
+    .hero__bgglow { top: 45%; right: 50%; transform: translateX(50%); }
+  }
+</style>
+
+<script>
+  const root = document.querySelector('.hero');
+  if (!root) throw new Error('hero-missing');
+  const slides = [...root.querySelectorAll('.hero__slide')];
+  const dots = [...root.querySelectorAll('.dot')];
+  let idx = 0, timer;
+
+  function go(n) {
+    idx = (n + slides.length) % slides.length;
+    slides.forEach((s, i) => {
+      const active = i === idx;
+      s.classList.toggle('is-active', active);
+      s.setAttribute('aria-hidden', String(!active));
+    });
+    dots.forEach((d, i) => { d.classList.toggle('is-active', i === idx); d.setAttribute('aria-selected', String(i === idx)); });
+  }
+  function next() { go(idx + 1); }
+  function start() { stop(); timer = setInterval(next, 5500); }
+  function stop() { clearInterval(timer); }
+
+  dots.forEach((d, i) => d.addEventListener('click', () => { go(i); start(); }));
+
+  // Swipe táctil
+  let x0 = null;
+  root.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; stop(); }, { passive: true });
+  root.addEventListener('touchend', (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 45) go(idx + (dx < 0 ? 1 : -1));
+    x0 = null; start();
+  }, { passive: true });
+
+  root.addEventListener('mouseenter', stop);
+  root.addEventListener('mouseleave', start);
+  document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+  start();
+</script>

@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import FounderSection from '../components/FounderSection.astro';
+import ContactSection from '../components/ContactSection.astro';
+import { services } from '../data/site.js';
+---
+<Base>
+  <Hero />
+
+  <section class="section" id="servicios" aria-labelledby="serv-h">
+    <div class="container">
+      <header class="serv-head" data-reveal>
+        <p class="eyebrow">Lo que hacemos</p>
+        <h2 class="h-section" id="serv-h">Nuestros servicios</h2>
+        <p class="lead max-60">Estrategias a medida para cada etapa de tu marca: del plan a la ejecución, con foco en resultados.</p>
+      </header>
+
+      <div class="serv-grid">
+        {services.map((s) => <ServiceCard service={s} />)}
+      </div>
+    </div>
+  </section>
+
+  <FounderSection />
+
+  <ContactSection />
+</Base>
+
+<style>
+  .serv-head { text-align: center; display: grid; justify-items: center; gap: .7rem; margin-bottom: clamp(2rem, 5vw, 3.5rem); }
+  .serv-head .lead { margin-inline: auto; }
+  .serv-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.2rem, 2.6vw, 2rem);
+  }
+  @media (max-width: 900px) { .serv-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 460px) { .serv-grid { gap: 1rem; } }
+</style>

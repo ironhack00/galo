@@ -1,0 +1,105 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactSection from '../../components/ContactSection.astro';
+import { services } from '../../data/site.js';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug }, props: { service: s } }));
+}
+const { service } = Astro.props;
+const others = services.filter((s) => s.slug !== service.slug);
+---
+<Base title={service.title} description={service.lead}>
+  <article class="svc-detail section">
+    <div class="svc-detail__glow" aria-hidden="true"></div>
+    <div class="container svc-detail__grid">
+      <div class="svc-detail__text" data-reveal>
+        <p class="eyebrow">Servicio</p>
+        <h1 class="h-section">{service.title}</h1>
+        <p class="lead text-justify svc-detail__lead">{service.lead}</p>
+
+        {service.listTitle && <p class="svc-detail__listtitle">{service.listTitle}</p>}
+        <ul class="svc-detail__points">
+          {service.points.map((p) => (
+            <li>
+              <span class="point-ico"><img src={p.icon} alt="" width="26" height="26" /></span>
+              <span>{p.text}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div class="svc-detail__cta">
+          <a class="btn btn-green" href="/contacto/">Solicitar este servicio</a>
+          <a class="btn btn-ghost" href="/#servicios">Ver todos los servicios</a>
+        </div>
+      </div>
+
+      <figure class="svc-detail__fig glow" data-reveal>
+        <img src={service.img} alt={`Ilustración de ${service.title}`} width="620" height="520" loading="eager" decoding="async" />
+      </figure>
+    </div>
+  </article>
+
+  <section class="section other" aria-labelledby="other-h">
+    <div class="container">
+      <h2 class="h-sub center" id="other-h" data-reveal>Otros servicios</h2>
+      <div class="other__grid">
+        {others.map((s) => (
+          <a class="other__item" href={`/servicios/${s.slug}/`}>
+            <img src={s.img} alt="" width="70" height="70" loading="lazy" />
+            <span>{s.title}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <ContactSection />
+</Base>
+
+<style>
+  .svc-detail { position: relative; overflow: hidden; }
+  .svc-detail__glow {
+    position: absolute; right: -6%; bottom: -10%; width: 55vw; max-width: 640px; aspect-ratio: 1;
+    background: radial-gradient(closest-side, rgba(35,161,43,.30), transparent 70%); pointer-events: none;
+  }
+  .svc-detail__grid {
+    position: relative; display: grid; grid-template-columns: 1.05fr .95fr;
+    align-items: center; gap: clamp(1.5rem, 5vw, 4rem);
+  }
+  .svc-detail__text .eyebrow { margin-bottom: .8rem; }
+  .svc-detail__text .h-section { margin-bottom: 1.1rem; }
+  .svc-detail__lead { max-width: 52ch; margin-bottom: 1.8rem; color: rgba(255,255,255,.82); }
+  .svc-detail__listtitle { font-weight: 600; margin-bottom: 1rem; }
+
+  .svc-detail__points { display: grid; gap: 1rem; margin-bottom: 2rem; }
+  .svc-detail__points li { display: flex; align-items: center; gap: .9rem; font-weight: 500; }
+  .point-ico {
+    flex: none; width: 46px; height: 46px; display: grid; place-items: center;
+    background: rgba(255,255,255,.05); border: 1px solid var(--line); border-radius: 12px;
+  }
+  .point-ico img { width: 24px; height: 24px; }
+
+  .svc-detail__cta { display: flex; flex-wrap: wrap; gap: .8rem; }
+
+  .svc-detail__fig { margin: 0; display: grid; place-items: center; }
+  .svc-detail__fig img { width: 100%; max-width: 480px; height: auto; filter: drop-shadow(0 30px 40px rgba(0,0,0,.5)); }
+
+  .other { background: var(--bg-soft); }
+  .other .h-sub { margin-bottom: 2rem; }
+  .other__grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+  .other__item {
+    display: grid; justify-items: center; gap: .7rem; text-align: center;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 1.4rem 1rem; font-size: .85rem; font-weight: 500; color: var(--muted);
+    transition: transform .2s ease, border-color .2s ease, color .2s ease;
+  }
+  .other__item:hover { transform: translateY(-4px); border-color: var(--green); color: #fff; }
+  .other__item img { width: 60px; height: 60px; object-fit: contain; }
+
+  @media (max-width: 860px) {
+    .svc-detail__grid { grid-template-columns: 1fr; }
+    .svc-detail__fig { order: -1; max-width: 360px; margin-inline: auto; }
+    .other__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

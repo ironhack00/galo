@@ -1,0 +1,129 @@
+---
+// Pantalla de carga con el logo de GALO animado.
+// Visible por defecto (desde el primer paint) y se oculta al cargar la página.
+// Vuelve a mostrarse al navegar entre secciones para una transición fluida.
+---
+<div id="loader" class="loader" role="status" aria-live="polite" aria-label="Cargando">
+  <div class="loader__logo">
+    <svg class="loader__mark" width="120" height="120" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <path class="tri" d="M6 10 H58 L32 58 Z" pathLength="100"
+            stroke="currentColor" stroke-width="2.6" stroke-linejoin="round" fill="none"/>
+      <path class="beat" d="M14 25 L21 25 L26 34 L33 17 L38 30 L43 25 L50 25" pathLength="100"
+            stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <span class="loader__word">
+      <strong>GALO</strong>
+      <em>marketing</em>
+    </span>
+  </div>
+  <div class="loader__bar"><span></span></div>
+</div>
+
+<style>
+  .loader {
+    position: fixed; inset: 0; z-index: 9999;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1.6rem;
+    background: var(--bg, #0a0b0a);
+    transition: opacity .5s ease, visibility .5s ease;
+  }
+  .loader.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  /* Visita ya vista en la sesión: transición más ágil */
+  .loader.is-quick { transition: opacity .25s ease, visibility .25s ease; }
+
+  .loader__logo { display: grid; justify-items: center; gap: .8rem; }
+
+  .loader__mark { color: var(--green, #23a12b); overflow: visible; }
+  .loader__mark .tri {
+    stroke-dasharray: 100; stroke-dashoffset: 100;
+    animation: draw 1s ease forwards;
+    filter: drop-shadow(0 0 10px rgba(35,161,43,.5));
+  }
+  .loader__mark .beat {
+    stroke-dasharray: 26 100;
+    animation: sweep 1.5s linear .5s infinite;
+  }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes sweep {
+    from { stroke-dashoffset: 126; }
+    to   { stroke-dashoffset: 0; }
+  }
+
+  .loader__logo { animation: bob 2.4s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+  .loader__word { display: grid; justify-items: center; line-height: 1; opacity: 0; animation: fadeUp .6s ease .35s forwards; }
+  .loader__word strong { font-family: var(--font-display, sans-serif); font-weight: 600; font-size: 2rem; letter-spacing: .05em; color: #fff; }
+  .loader__word em {
+    font-style: normal; font-weight: 400; font-size: .72rem; letter-spacing: .5em;
+    text-transform: lowercase; color: rgba(255,255,255,.6); margin-top: 4px; padding-left: 4px;
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .loader__bar {
+    width: 160px; height: 3px; border-radius: 3px; overflow: hidden;
+    background: rgba(255,255,255,.1);
+  }
+  .loader__bar span {
+    display: block; height: 100%; width: 40%; border-radius: 3px;
+    background: linear-gradient(90deg, transparent, var(--green-bright, #35c13d), transparent);
+    animation: slide 1.2s ease-in-out infinite;
+  }
+  @keyframes slide {
+    0% { transform: translateX(-120%); }
+    100% { transform: translateX(320%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .loader__mark .tri { animation: none; stroke-dashoffset: 0; }
+    .loader__mark .beat { animation: none; stroke-dasharray: none; }
+    .loader__logo, .loader__word, .loader__bar span { animation: none; opacity: 1; }
+    .loader { transition: opacity .2s ease; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var loader = document.getElementById('loader');
+    if (!loader) return;
+
+    // Primera visita de la sesión → intro completa. Después → loader rápido.
+    var firstVisit = true;
+    try {
+      firstVisit = !sessionStorage.getItem('galo_seen');
+      sessionStorage.setItem('galo_seen', '1');
+    } catch (_) {}
+    var MIN = firstVisit ? 2500 : 450;   // tiempo mínimo visible (ms)
+    if (!firstVisit) loader.classList.add('is-quick');
+    var shownAt = performance.now();
+
+    function hide() {
+      var wait = Math.max(0, MIN - (performance.now() - shownAt));
+      setTimeout(function () { loader.classList.add('is-hidden'); }, wait);
+    }
+    function show() { shownAt = performance.now(); loader.classList.remove('is-hidden'); }
+
+    // Ocultar cuando la página terminó de cargar (con red de seguridad).
+    if (document.readyState === 'complete') hide();
+    else window.addEventListener('load', hide);
+    setTimeout(hide, 4000); // fallback: nunca se queda pegado
+
+    // Al volver con atrás/adelante (bfcache) mostramos la página sin loader pegado.
+    window.addEventListener('pageshow', function (e) { if (e.persisted) loader.classList.add('is-hidden'); });
+
+    // Mostrar el loader al navegar a otra sección.
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a');
+      if (!a) return;
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      if (a.target === '_blank' || a.hasAttribute('download')) return;
+      var href = a.getAttribute('href');
+      if (!href || href[0] === '#') return;
+      var url;
+      try { url = new URL(a.href, location.href); } catch (_) { return; }
+      if (url.origin !== location.origin) return;          // enlace externo
+      if (url.pathname === location.pathname) return;       // misma página (ancla / scroll)
+      show();
+    }, true);
+  })();
+</script>

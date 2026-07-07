@@ -1,0 +1,42 @@
+---
+// Logo GALO Marketing recreado en SVG (marca) + wordmark en HTML.
+// Escala con la altura del contenedor y se puede recolorear vía currentColor.
+const { size = 44, href = '/' } = Astro.props;
+---
+<a class="logo" href={href} aria-label="GALO Marketing — Inicio">
+  <svg class="logo__mark" width={size} height={size} viewBox="0 0 64 64" fill="none" aria-hidden="true">
+    <!-- Triángulo invertido -->
+    <path d="M6 10 H58 L32 58 Z" stroke="currentColor" stroke-width="3.4"
+          stroke-linejoin="round" fill="none"/>
+    <!-- Trazo "latido" dentro del triángulo -->
+    <path d="M14 25 L21 25 L26 34 L33 17 L38 30 L43 25 L50 25"
+          stroke="currentColor" stroke-width="3.2"
+          stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </svg>
+  <span class="logo__word">
+    <strong>GALO</strong>
+    <em>marketing</em>
+  </span>
+</a>
+
+<style>
+  .logo { display: inline-flex; align-items: center; gap: .55rem; color: #fff; }
+  .logo__mark { flex: none; }
+  .logo__word { display: grid; line-height: 1; }
+  .logo__word strong {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.5rem;
+    letter-spacing: .04em;
+  }
+  .logo__word em {
+    font-style: normal;
+    font-weight: 400;
+    font-size: .62rem;
+    letter-spacing: .42em;
+    text-transform: lowercase;
+    color: rgba(255,255,255,.72);
+    margin-top: 2px;
+    padding-left: 2px;
+  }
+</style>

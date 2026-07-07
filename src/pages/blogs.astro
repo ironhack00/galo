@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import ContactSection from '../components/ContactSection.astro';
+import { blogs } from '../data/site.js';
+const featured = blogs[0];
+const rest = blogs.slice(1);
+---
+<Base title="Blogs" description="Ideas, análisis y estrategias de marketing por GALO Marketing.">
+  <section class="section blogs" aria-labelledby="blogs-h">
+    <div class="container">
+      <header class="blogs__head" data-reveal>
+        <p class="eyebrow">Ideas & estrategia</p>
+        <h1 class="h-section" id="blogs-h">Blogs</h1>
+        <p class="lead max-60">Reflexiones y análisis sobre marketing, marca y comunicación.</p>
+      </header>
+
+      <a class="feature" href={`/blog/${featured.slug}/`} data-reveal>
+        <div class="feature__body">
+          <span class="chip">{featured.category}</span>
+          <h2 class="h-sub feature__title">{featured.title}</h2>
+          <p class="feature__sub">{featured.subtitle}</p>
+          <p class="feature__excerpt">{featured.excerpt}</p>
+          <span class="plus-info">Leer artículo →</span>
+        </div>
+        <div class="feature__side" aria-hidden="true">
+          <img src="/assets/img/serv-1.png" alt="" width="260" height="220" loading="lazy" />
+        </div>
+      </a>
+
+      {rest.length > 0 && (
+        <div class="blogs__grid">
+          {rest.map((b) => (
+            <a class="post" href={`/blog/${b.slug}/`} data-reveal>
+              <span class="chip">{b.category}</span>
+              <h3 class="post__title">{b.title}</h3>
+              <p class="post__excerpt">{b.excerpt}</p>
+              <span class="plus-info">Leer más →</span>
+            </a>
+          ))}
+        </div>
+      )}
+
+      <p class="blogs__soon" data-reveal>Muy pronto sumaremos más artículos. ¿Tenés un tema en mente? <a href="/contacto/">Escribinos</a>.</p>
+    </div>
+  </section>
+
+  <ContactSection />
+</Base>
+
+<style>
+  .blogs__head { text-align: center; display: grid; justify-items: center; gap: .6rem; margin-bottom: clamp(2rem, 5vw, 3rem); }
+  .blogs__head .lead { margin-inline: auto; }
+
+  .chip {
+    display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--green-bright); background: rgba(35,161,43,.12); border: 1px solid rgba(35,161,43,.3);
+    padding: .3rem .7rem; border-radius: var(--radius-pill); margin-bottom: 1rem;
+  }
+
+  .feature {
+    display: grid; grid-template-columns: 1.4fr .6fr; gap: 1.5rem; align-items: center;
+    background: linear-gradient(120deg, var(--surface), var(--bg-soft));
+    border: 1px solid var(--line); border-radius: var(--radius-lg);
+    padding: clamp(1.6rem, 4vw, 3rem); overflow: hidden;
+    transition: transform .25s ease, border-color .25s ease;
+  }
+  .feature:hover { transform: translateY(-6px); border-color: var(--green); }
+  .feature__title { margin-bottom: .4rem; }
+  .feature__sub { color: var(--gold-soft); font-weight: 500; margin-bottom: 1rem; font-size: .9rem; }
+  .feature__excerpt { color: var(--muted); margin-bottom: 1.4rem; max-width: 54ch; }
+  .feature__side { display: grid; place-items: center; }
+  .feature__side img { width: 100%; max-width: 220px; filter: drop-shadow(0 20px 30px rgba(0,0,0,.4)); }
+
+  .blogs__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; margin-top: 1.4rem; }
+  .post {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 1.6rem; transition: transform .2s ease, border-color .2s ease;
+  }
+  .post:hover { transform: translateY(-5px); border-color: var(--green); }
+  .post__title { font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; margin-bottom: .6rem; }
+  .post__excerpt { color: var(--muted); font-size: .92rem; margin-bottom: 1rem; }
+
+  .blogs__soon { text-align: center; color: var(--muted); margin-top: 2.5rem; }
+  .blogs__soon a { color: var(--green-bright); font-weight: 600; }
+
+  @media (max-width: 780px) {
+    .feature { grid-template-columns: 1fr; }
+    .feature__side { order: -1; }
+    .blogs__grid { grid-template-columns: 1fr; }
+  }
+</style>

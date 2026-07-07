@@ -1,0 +1,159 @@
+---
+import Logo from './Logo.astro';
+import { nav, site } from '../data/site.js';
+const path = Astro.url.pathname;
+const isActive = (href) => {
+  if (href === '/') return path === '/';
+  const clean = href.replace(/#.*$/, '');
+  return clean !== '/' && path.startsWith(clean);
+};
+---
+<header class="header" id="site-header">
+  <div class="container header__inner">
+    <Logo />
+
+    <nav class="nav" aria-label="Principal">
+      {nav.map((item) => (
+        <a href={item.href} class:list={['nav__link', { 'is-active': isActive(item.href) }]}>{item.label}</a>
+      ))}
+    </nav>
+
+    <div class="header__actions">
+      <a class="social" href={site.social.instagram} target="_blank" rel="noopener" aria-label="Instagram">
+        <span class="social__ico" style="--m:url(/assets/icons/ig.svg)"></span>
+      </a>
+      <a class="social" href={site.social.facebook} target="_blank" rel="noopener" aria-label="Facebook">
+        <span class="social__ico" style="--m:url(/assets/icons/fb.svg)"></span>
+      </a>
+      <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Menú mobile a pantalla completa -->
+  <div class="mobile-menu" id="mobile-menu">
+    <nav class="mobile-menu__nav" aria-label="Menú">
+      {nav.map((item) => (
+        <a href={item.href} class="mobile-menu__link">{item.label}</a>
+      ))}
+    </nav>
+    <div class="mobile-menu__social">
+      <a class="social social--lg" href={site.social.instagram} target="_blank" rel="noopener" aria-label="Instagram">
+        <span class="social__ico" style="--m:url(/assets/icons/ig.svg)"></span>
+      </a>
+      <a class="social social--lg" href={site.social.facebook} target="_blank" rel="noopener" aria-label="Facebook">
+        <span class="social__ico" style="--m:url(/assets/icons/fb.svg)"></span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(10, 11, 10, .72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+    transition: background .3s ease, border-color .3s ease;
+  }
+  .header.is-scrolled { background: rgba(8, 9, 8, .92); }
+  .header__inner {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; height: 76px;
+  }
+
+  .nav { display: flex; gap: clamp(1rem, 2.4vw, 2.2rem); }
+  .nav__link {
+    position: relative; font-weight: 500; color: rgba(255,255,255,.86);
+    padding: .35rem 0; transition: color .2s ease;
+  }
+  .nav__link::after {
+    content: ''; position: absolute; left: 0; right: 100%; bottom: -2px; height: 2px;
+    background: var(--green-bright); border-radius: 2px; transition: right .25s ease;
+  }
+  .nav__link:hover { color: #fff; }
+  .nav__link:hover::after { right: 0; }
+  .nav__link.is-active { color: var(--green-bright); }
+  .nav__link.is-active::after { right: 0; }
+
+  .header__actions { display: flex; align-items: center; gap: .7rem; }
+
+  /* Redes: el SVG (badge blanco) se usa como máscara y se pinta */
+  .social { display: inline-grid; place-items: center; }
+  .social__ico {
+    width: 30px; height: 30px; display: block;
+    background: var(--green);
+    -webkit-mask: var(--m) center / contain no-repeat;
+    mask: var(--m) center / contain no-repeat;
+    transition: background .2s ease, transform .2s ease;
+  }
+  .social:hover .social__ico { background: var(--green-bright); transform: translateY(-2px); }
+
+  /* Hamburguesa */
+  .burger {
+    display: none; flex-direction: column; justify-content: center; gap: 5px;
+    width: 44px; height: 44px; background: transparent; border: 0; padding: 8px;
+  }
+  .burger span { height: 2.5px; width: 100%; background: #fff; border-radius: 3px; transition: transform .3s ease, opacity .2s ease; }
+  .burger.is-open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+  .burger.is-open span:nth-child(2) { opacity: 0; }
+  .burger.is-open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+  /* Menú mobile */
+  .mobile-menu {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 45;
+    height: 100dvh; padding-top: 76px;
+    background: rgba(8, 9, 8, .98);
+    backdrop-filter: blur(8px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2rem;
+    /* Cerrado: invisible y sin capturar clicks (no bloquea el nav) */
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity .3s ease, visibility .3s ease;
+  }
+  .mobile-menu.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
+  /* En desktop nunca se muestra ni interfiere */
+  @media (min-width: 901px) { .mobile-menu { display: none; } }
+  .mobile-menu__nav { display: flex; flex-direction: column; align-items: center; gap: 1.4rem; }
+  .mobile-menu__link {
+    font-family: var(--font-display); font-weight: 600; font-size: 1.9rem;
+    color: #fff; transition: color .2s ease;
+  }
+  .mobile-menu__link:hover, .mobile-menu__link:active { color: var(--green-bright); }
+  .mobile-menu__social { display: flex; gap: 1.2rem; }
+  .social--lg .social__ico { width: 44px; height: 44px; background: #fff; }
+  .social--lg:hover .social__ico { background: var(--green-bright); }
+
+  @media (max-width: 900px) {
+    .nav { display: none; }
+    .burger { display: flex; }
+    .header__actions .social { display: none; }
+  }
+  /* Evita scroll del body cuando el menú está abierto */
+  :global(body.menu-open) { overflow: hidden; }
+</style>
+
+<script>
+  const burger = document.getElementById('burger');
+  const menu = document.getElementById('mobile-menu');
+  const header = document.getElementById('site-header');
+
+  function toggleMenu(open) {
+    const willOpen = open ?? !menu.classList.contains('is-open');
+    menu.classList.toggle('is-open', willOpen);
+    burger.classList.toggle('is-open', willOpen);
+    burger.setAttribute('aria-expanded', String(willOpen));
+    document.body.classList.toggle('menu-open', willOpen);
+  }
+
+  burger?.addEventListener('click', () => toggleMenu());
+  menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => toggleMenu(false)));
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') toggleMenu(false); });
+
+  // Sombra/opacidad del header al hacer scroll
+  const onScroll = () => header?.classList.toggle('is-scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+</script>

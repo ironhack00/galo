@@ -1,0 +1,31 @@
+---
+// Fondo decorativo: triángulos invertidos anidados en degradé verde.
+// Se coloca dentro de un contenedor con `position: relative; isolation: isolate;`.
+const { width = 'min(760px, 95%)' } = Astro.props;
+const layers = [
+  { s: 1.00, c: '#0a2a0f', o: 1 },
+  { s: 0.80, c: '#0f3d16', o: 1 },
+  { s: 0.60, c: '#14561d', o: 1 },
+  { s: 0.42, c: '#1c7325', o: 1 },
+  { s: 0.26, c: '#249a2d', o: .95 },
+];
+---
+<div class="tri-layers" aria-hidden="true" style={`--w:${width}`}>
+  {layers.map((l) => (
+    <span style={`width:calc(var(--w) * ${l.s}); background:${l.c}; opacity:${l.o}`}></span>
+  ))}
+</div>
+
+<style>
+  .tri-layers {
+    position: absolute; inset: 0; z-index: -1; overflow: hidden;
+    display: grid; justify-items: center; align-items: start; pointer-events: none;
+    mask-image: radial-gradient(120% 90% at 50% 0%, #000 55%, transparent 85%);
+    -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 55%, transparent 85%);
+  }
+  .tri-layers span {
+    position: absolute; top: 0;
+    aspect-ratio: 235 / 204;
+    clip-path: polygon(50% 100%, 0 0, 100% 0);
+  }
+</style>

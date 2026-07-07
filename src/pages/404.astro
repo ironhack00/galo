@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Página no encontrada" description="La página que buscás no existe.">
+  <section class="nf glow section">
+    <div class="container center" data-reveal>
+      <p class="eyebrow">Error 404</p>
+      <h1 class="h-hero">Esta página se fue de campaña</h1>
+      <p class="lead" style="margin-inline:auto">No encontramos lo que buscabas, pero podemos ayudarte a encontrar el rumbo.</p>
+      <div class="nf__cta">
+        <a class="btn btn-green" href="/">Volver al inicio</a>
+        <a class="btn btn-ghost" href="/contacto/">Contactarnos</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf { min-height: 60vh; display: grid; align-items: center; }
+  .nf .h-hero { margin: .8rem 0 1rem; }
+  .nf__cta { display: flex; gap: .8rem; justify-content: center; flex-wrap: wrap; margin-top: 1.6rem; }
+</style>

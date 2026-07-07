@@ -1,0 +1,14 @@
+{
+  "name": "galo-marketing-web",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Sitio web estático de GALO Marketing — consultora de marketing (Puerto Rico, Misiones).",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^4.16.0"
+  }
+}

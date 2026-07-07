@@ -1,0 +1,73 @@
+---
+import Base from '../../layouts/Base.astro';
+import ContactSection from '../../components/ContactSection.astro';
+import { blogs, site } from '../../data/site.js';
+
+export function getStaticPaths() {
+  return blogs.map((b) => ({ params: { slug: b.slug }, props: { post: b } }));
+}
+const { post } = Astro.props;
+const f = site.founder;
+---
+<Base title={post.title} description={post.excerpt}>
+  <article class="post-detail section">
+    <div class="container post-detail__wrap">
+      <header class="post-detail__head" data-reveal>
+        <p class="eyebrow eyebrow--center">{post.category}</p>
+        <h1 class="h-section">{post.title}</h1>
+        <p class="post-detail__sub">{post.subtitle}</p>
+      </header>
+
+      <div class="prose" data-reveal>
+        {post.body.map((block) =>
+          block.t === 'p'
+            ? <p class="text-justify">{block.c}</p>
+            : <ul class="prose__list">{block.c.map((li) => <li>{li}</li>)}</ul>
+        )}
+      </div>
+
+      <aside class="author" data-reveal>
+        <img src="/assets/img/fundador.png" alt={f.name} width="120" height="120" loading="lazy" />
+        <div>
+          <h2 class="author__name">{f.name}</h2>
+          <p class="author__intro">{f.intro}</p>
+          <p class="author__role">{f.role} de {site.name}</p>
+        </div>
+      </aside>
+
+      <div class="post-detail__back" data-reveal>
+        <a class="btn btn-ghost" href="/blogs/">← Volver a Blogs</a>
+      </div>
+    </div>
+  </article>
+
+  <ContactSection />
+</Base>
+
+<style>
+  .post-detail__wrap { max-width: 780px; margin-inline: auto; }
+  .post-detail__head { text-align: center; margin-bottom: 2.5rem; }
+  .eyebrow--center { display: block; }
+  .post-detail__head .h-section { margin: .6rem 0 .8rem; }
+  .post-detail__sub { color: var(--gold-soft); font-weight: 500; }
+
+  .prose { display: grid; gap: 1.2rem; color: rgba(255,255,255,.85); font-size: 1.02rem; line-height: 1.8; }
+  .prose__list { display: grid; gap: .6rem; padding-left: 1.2rem; }
+  .prose__list li { position: relative; padding-left: 1.2rem; color: rgba(255,255,255,.85); }
+  .prose__list li::before { content: ''; position: absolute; left: 0; top: .7em; width: 8px; height: 8px; background: var(--green-bright); border-radius: 2px; transform: rotate(45deg); }
+
+  .author {
+    display: flex; gap: 1.4rem; align-items: center; margin-top: 3rem;
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 1.6rem;
+  }
+  .author img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; object-position: top; border: 2px solid var(--green); background: var(--green-deep); flex: none; }
+  .author__name { font-family: var(--font-display); font-weight: 600; font-size: 1.2rem; margin-bottom: .3rem; }
+  .author__intro { color: var(--muted); font-size: .92rem; margin-bottom: .3rem; }
+  .author__role { color: var(--green-bright); font-size: .85rem; font-weight: 600; }
+
+  .post-detail__back { margin-top: 2.5rem; text-align: center; }
+
+  @media (max-width: 560px) {
+    .author { flex-direction: column; text-align: center; }
+  }
+</style>
