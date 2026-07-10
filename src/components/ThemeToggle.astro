@@ -1,0 +1,30 @@
+---
+// Botón de modo claro/oscuro. El tema inicial lo fija un script en el <head>
+// (Base.astro) para evitar parpadeo. Este botón solo lo alterna y persiste.
+---
+<button id="theme-toggle" class="theme-toggle" type="button"
+        aria-label="Cambiar tema" title="Cambiar modo claro/oscuro">
+  <!-- Sol: visible en modo oscuro (click → claro) -->
+  <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="4.2"/>
+    <path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"/>
+  </svg>
+  <!-- Luna: visible en modo claro (click → oscuro) -->
+  <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>
+  </svg>
+</button>
+
+<script is:inline>
+  (function () {
+    var btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      var next = cur === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('galo-theme', next); } catch (e) {}
+    });
+  })();
+</script>

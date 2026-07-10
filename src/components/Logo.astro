@@ -20,7 +20,7 @@ const { size = 44, href = '/' } = Astro.props;
 </a>
 
 <style>
-  .logo { display: inline-flex; align-items: center; gap: .55rem; color: #fff; }
+  .logo { display: inline-flex; align-items: center; gap: .55rem; color: var(--text); }
   .logo__mark { flex: none; }
   .logo__word { display: grid; line-height: 1; }
   .logo__word strong {
@@ -35,7 +35,7 @@ const { size = 44, href = '/' } = Astro.props;
     font-size: .62rem;
     letter-spacing: .42em;
     text-transform: lowercase;
-    color: rgba(255,255,255,.72);
+    color: var(--muted);
     margin-top: 2px;
     padding-left: 2px;
   }
