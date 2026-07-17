@@ -26,8 +26,9 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(site.mapQuery
       </div>
       <input type="text" name="nombre" placeholder="Nombre y Apellido" autocomplete="name" required />
       <textarea name="mensaje" placeholder="Mensaje" rows="5" required></textarea>
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none" />
       <button type="submit" class="btn btn-green form__submit">Enviar</button>
-      <p class="form__hint">Al enviar, se abrirá WhatsApp con tu consulta lista para mandar.</p>
+      <p class="form__hint" id="form-hint">Tu consulta se envía directamente a nuestro correo.</p>
     </form>
 
     <div class="contact__map" data-reveal>
@@ -80,17 +81,49 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(site.mapQuery
   }
 </style>
 
-<script is:inline define:vars={{ phone: site.phoneRaw }}>
+<script is:inline define:vars={{ email: site.email }}>
   const form = document.getElementById('contact-form');
-  form?.addEventListener('submit', (e) => {
+  const hint = document.getElementById('form-hint');
+  const btn = form?.querySelector('.form__submit');
+
+  form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!form.reportValidity()) return;
     const d = new FormData(form);
-    const msg =
-      `Hola GALO Marketing! Soy ${d.get('nombre') || ''}.%0A` +
-      `Email: ${d.get('email') || ''}%0A` +
-      `Teléfono: ${d.get('telefono') || '-'}%0A%0A` +
-      `${d.get('mensaje') || ''}`;
-    window.open(`https://wa.me/${phone}?text=${msg}`, '_blank', 'noopener');
+    if (d.get('_honey')) return; // bot atrapado por el honeypot
+
+    btn.disabled = true;
+    hint.textContent = 'Enviando…';
+    try {
+      const res = await fetch(`https://formsubmit.co/ajax/${email}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          Nombre: d.get('nombre'),
+          Email: d.get('email'),
+          'Teléfono': d.get('telefono') || '-',
+          Mensaje: d.get('mensaje'),
+          _subject: `Consulta web de ${d.get('nombre') || ''}`,
+          _template: 'table',
+          _captcha: 'false',
+        }),
+      });
+      if (!res.ok) throw new Error('formsubmit-error');
+      form.reset();
+      hint.textContent = '¡Consulta enviada! Te responderemos a la brevedad.';
+    } catch {
+      // Si el servicio falla, caemos al correo del visitante como plan B.
+      hint.textContent = 'No pudimos enviar el formulario; se abrirá tu correo como alternativa.';
+      const subject = encodeURIComponent(`Consulta web de ${d.get('nombre') || ''}`);
+      const body = encodeURIComponent(
+        `Hola GALO Marketing! Soy ${d.get('nombre') || ''}.\n` +
+        `Email: ${d.get('email') || ''}\n` +
+        `Teléfono: ${d.get('telefono') || '-'}\n\n` +
+        `${d.get('mensaje') || ''}`
+      );
+      window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    } finally {
+      btn.disabled = false;
+    }
   });
 </script>

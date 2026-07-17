@@ -7,14 +7,14 @@ export const site = {
   name: 'GALO Marketing',
   tagline: 'Consultora de Marketing',
   domain: 'galomarketing.com.ar',
-  email: 'info@galomarketing.com.ar',
-  phone: '+54 9 3764 39-7618',
-  phoneRaw: '5493764397618', // para WhatsApp / tel:
+  email: 'galo.marketing90@gmail.com',
+  phone: '+54 9 3743 50-1667',
+  phoneRaw: '5493743501667', // para WhatsApp / tel:
   address: 'Av. Carlos Culmey N° 43. Puerto Rico, Misiones.',
   mapQuery: 'Av. Carlos Culmey 43, Puerto Rico, Misiones, Argentina',
   social: {
-    instagram: 'https://www.instagram.com/galo.marketing',
-    facebook: 'https://www.facebook.com/galo.marketing',
+    instagram: 'https://www.instagram.com/galo.mkt/',
+    facebook: 'https://www.facebook.com/galo.mkt',
   },
   founder: {
     name: 'Nicolás Enrique',
@@ -33,7 +33,6 @@ export const nav = [
   { label: 'Inicio', href: '/' },
   { label: 'Servicios', href: '/#servicios' },
   { label: 'Nosotros', href: '/nosotros/' },
-  { label: 'Blogs', href: '/blogs/' },
   { label: 'Contacto', href: '/contacto/' },
 ];
 

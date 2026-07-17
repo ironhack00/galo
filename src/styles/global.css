@@ -42,7 +42,8 @@
   --shadow: 0 20px 50px -20px rgba(0, 0, 0, .6);
   --shadow-card: 0 24px 60px -24px rgba(0, 0, 0, .45);
 
-  --font-display: 'Fredoka', 'Poppins', system-ui, sans-serif;
+  /* Arboria (maqueta) no está en Google Fonts; Poppins es el geométrico más cercano */
+  --font-display: 'Poppins', system-ui, sans-serif;
   --font-body:    'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
