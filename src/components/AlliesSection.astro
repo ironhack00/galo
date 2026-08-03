@@ -8,9 +8,7 @@
       <p class="eyebrow">Con quiénes trabajamos</p>
       <h2 class="h-section" id="allies-h">Aliados estratégicos</h2>
       <p class="lead max-60">
-        Sumamos partners que amplían lo que podemos ofrecerte. Tecnología y
-        talento que se integran a nuestras estrategias para que cada proyecto
-        llegue más lejos.
+        Sumamos partners que amplían lo que podemos ofrecerte.
       </p>
     </header>
 
@@ -18,21 +16,16 @@
       <div class="allies__copy" data-reveal>
         <p class="eyebrow eyebrow--green">Partner tecnológico</p>
         <h3 class="h-sub">Intellix — Asistentes con IA</h3>
-        <p class="text-muted">
-          Junto a Intellix incorporamos asistentes conversacionales con
-          inteligencia artificial a las marcas que acompañamos: atienden
-          consultas las 24 horas, califican contactos y derivan al equipo humano
-          cuando hace falta.
+        <p class="allies__text">
+          Atienden a tus clientes las 24 horas, responden al instante y derivan
+          al equipo cuando hace falta.
         </p>
-        <ul class="allies__list">
-          <li>Respuestas inmediatas, todos los días del año</li>
-          <li>Más consultas convertidas en oportunidades reales</li>
-          <li>Integración a medida con tu web y tus canales</li>
+        <ul class="allies__chips">
+          <li>Atención 24/7</li>
+          <li>Más conversiones</li>
+          <li>A medida</li>
         </ul>
-        <p class="allies__cue">
-          Probalo acá al lado: este es el mismo asistente que podés tener en tu
-          negocio.
-        </p>
+        <p class="allies__cue">Probalo vos mismo:</p>
       </div>
 
       <div class="allies__bot" data-reveal>
@@ -60,16 +53,25 @@
   }
   .allies__copy { display: grid; gap: .9rem; align-content: start; }
   .allies__copy .h-sub { margin: 0; }
+  .allies__text { color: var(--text-soft); margin: 0; }
 
-  .allies__list { list-style: none; padding: 0; margin: .2rem 0 0; display: grid; gap: .6rem; }
-  .allies__list li { position: relative; padding-left: 1.6rem; color: var(--text-soft); }
-  .allies__list li::before {
-    content: ''; position: absolute; left: 0; top: .55em;
-    width: .55rem; height: .55rem; border-radius: 2px;
-    background: var(--green-bright); transform: rotate(45deg);
+  /* Beneficios como chips: leen de un vistazo y centran bien en mobile. */
+  .allies__chips {
+    list-style: none; padding: 0; margin: .2rem 0 0;
+    display: flex; flex-wrap: wrap; gap: .5rem;
+  }
+  .allies__chips li {
+    display: inline-flex; align-items: center; gap: .45rem;
+    padding: .42rem .85rem; border-radius: var(--radius-pill);
+    border: 1px solid var(--line); background: var(--bg-soft);
+    color: var(--text-soft); font-size: .85rem; line-height: 1.2;
+  }
+  .allies__chips li::before {
+    content: ''; width: .4rem; height: .4rem; border-radius: 50%;
+    background: var(--green-bright); flex: none;
   }
 
-  .allies__cue { font-size: .92rem; color: var(--muted); margin-top: .4rem; }
+  .allies__cue { font-size: .88rem; color: var(--muted); margin: .2rem 0 0; }
 
   .allies__slot {
     position: relative; display: flex; min-height: 560px;
@@ -91,9 +93,20 @@
   @keyframes allies-spin { to { transform: rotate(360deg); } }
   @media (prefers-reduced-motion: reduce) { .allies__spinner { animation: none; } }
 
+  /* Mobile: una sola columna y TODO centrado — si no, el encabezado centrado
+     y la columna alineada a la izquierda se leen como un error de diseño. */
   @media (max-width: 900px) {
-    .allies__grid { grid-template-columns: 1fr; }
-    .allies__slot { min-height: 520px; }
+    .allies__grid { grid-template-columns: 1fr; gap: 1.8rem; }
+    .allies__copy { justify-items: center; text-align: center; gap: .7rem; }
+    .allies__text { max-width: 34ch; margin-inline: auto; }
+    .allies__chips { justify-content: center; }
+    .allies__cue { max-width: 32ch; margin-inline: auto; }
+    .allies__slot { min-height: 480px; }
+  }
+
+  @media (max-width: 460px) {
+    .allies__chips li { font-size: .8rem; padding: .38rem .7rem; }
+    .allies__slot { min-height: 460px; }
   }
 </style>
 
@@ -119,7 +132,17 @@
   #ia-w-panel.galo-inline #ia-w-expand { display: none !important; }
 
   @media (max-width: 900px) {
-    #ia-w-panel.galo-inline { height: 520px !important; }
+    #ia-w-panel.galo-inline { height: 480px !important; }
+
+    /* Mobile: el chat ocupa todo el ancho, así que el FAB de WhatsApp le queda
+       encima (y justo sobre el botón de enviar). Lo escondemos mientras la
+       sección está a la vista. */
+    html.allies-visible .wa-fab {
+      opacity: 0; pointer-events: none; transform: scale(.8);
+    }
+  }
+  @media (max-width: 460px) {
+    #ia-w-panel.galo-inline { height: 460px !important; }
   }
 </style>
 
@@ -194,6 +217,20 @@
         { rootMargin: '200px 0px' }
       );
       io.observe(slot);
+
+      // Marca la sección como visible para que el CSS esconda el FAB de
+      // WhatsApp mientras el chat está en pantalla (solo mobile).
+      const section = document.getElementById('aliados');
+      if (section) {
+        new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (e) {
+              document.documentElement.classList.toggle('allies-visible', e.isIntersecting);
+            });
+          },
+          { threshold: 0.2 }
+        ).observe(section);
+      }
     } else {
       start();
     }
