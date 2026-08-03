@@ -1,0 +1,201 @@
+---
+// Aliados estratégicos — presenta a los partners de GALO y embebe el asistente
+// de Intellix como demo en vivo dentro de la propia sección.
+---
+<section class="section allies" id="aliados" aria-labelledby="allies-h">
+  <div class="container">
+    <header class="allies__head" data-reveal>
+      <p class="eyebrow">Con quiénes trabajamos</p>
+      <h2 class="h-section" id="allies-h">Aliados estratégicos</h2>
+      <p class="lead max-60">
+        Sumamos partners que amplían lo que podemos ofrecerte. Tecnología y
+        talento que se integran a nuestras estrategias para que cada proyecto
+        llegue más lejos.
+      </p>
+    </header>
+
+    <div class="allies__grid">
+      <div class="allies__copy" data-reveal>
+        <p class="eyebrow eyebrow--green">Partner tecnológico</p>
+        <h3 class="h-sub">Intellix — Asistentes con IA</h3>
+        <p class="text-muted">
+          Junto a Intellix incorporamos asistentes conversacionales con
+          inteligencia artificial a las marcas que acompañamos: atienden
+          consultas las 24 horas, califican contactos y derivan al equipo humano
+          cuando hace falta.
+        </p>
+        <ul class="allies__list">
+          <li>Respuestas inmediatas, todos los días del año</li>
+          <li>Más consultas convertidas en oportunidades reales</li>
+          <li>Integración a medida con tu web y tus canales</li>
+        </ul>
+        <p class="allies__cue">
+          Probalo acá al lado: este es el mismo asistente que podés tener en tu
+          negocio.
+        </p>
+      </div>
+
+      <div class="allies__bot" data-reveal>
+        <div id="galo-bot-slot" class="allies__slot">
+          <div class="allies__slot-ph" id="galo-bot-ph" aria-hidden="true">
+            <span class="allies__spinner"></span>
+            <span>Iniciando el asistente…</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .allies__head {
+    text-align: center; display: grid; justify-items: center; gap: .7rem;
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+  .allies__head .lead { margin-inline: auto; }
+
+  .allies__grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center;
+  }
+  .allies__copy { display: grid; gap: .9rem; align-content: start; }
+  .allies__copy .h-sub { margin: 0; }
+
+  .allies__list { list-style: none; padding: 0; margin: .2rem 0 0; display: grid; gap: .6rem; }
+  .allies__list li { position: relative; padding-left: 1.6rem; color: var(--text-soft); }
+  .allies__list li::before {
+    content: ''; position: absolute; left: 0; top: .55em;
+    width: .55rem; height: .55rem; border-radius: 2px;
+    background: var(--green-bright); transform: rotate(45deg);
+  }
+
+  .allies__cue { font-size: .92rem; color: var(--muted); margin-top: .4rem; }
+
+  .allies__slot {
+    position: relative; display: flex; min-height: 560px;
+    border-radius: var(--radius-lg); overflow: hidden;
+  }
+  .allies__slot-ph {
+    position: absolute; inset: 0; display: grid; place-content: center;
+    justify-items: center; gap: .8rem; border-radius: var(--radius-lg);
+    background: var(--surface); border: 1px solid var(--line);
+    color: var(--muted); font-size: .9rem;
+  }
+  .allies__slot.is-ready .allies__slot-ph { display: none; }
+
+  .allies__spinner {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 2px solid var(--line); border-top-color: var(--green-bright);
+    animation: allies-spin .8s linear infinite;
+  }
+  @keyframes allies-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .allies__spinner { animation: none; } }
+
+  @media (max-width: 900px) {
+    .allies__grid { grid-template-columns: 1fr; }
+    .allies__slot { min-height: 520px; }
+  }
+</style>
+
+<!-- Overrides del widget: su DOM se monta en <body>, fuera del scope de Astro. -->
+<style is:global>
+  /* Sin burbuja flotante: el asistente vive dentro de la sección
+     (y así no compite con el FAB de WhatsApp). */
+  #ia-w-btn { display: none !important; }
+
+  #ia-w-panel.galo-inline {
+    position: static !important;
+    top: auto !important; right: auto !important;
+    bottom: auto !important; left: auto !important;
+    width: 100% !important; max-width: none !important;
+    height: 560px !important; max-height: none !important;
+    transform: none !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-card) !important;
+    z-index: 1 !important;
+  }
+  /* Empotrado: no se cierra ni se agranda. */
+  #ia-w-panel.galo-inline #ia-w-close,
+  #ia-w-panel.galo-inline #ia-w-expand { display: none !important; }
+
+  @media (max-width: 900px) {
+    #ia-w-panel.galo-inline { height: 520px !important; }
+  }
+</style>
+
+<script>
+  // El widget de Intellix se monta fijo en <body> y solo arranca la conversación
+  // al hacer clic en su burbuja. Acá lo cargamos, lo movemos dentro de la
+  // sección y lo abrimos cuando el usuario llega — así no creamos una
+  // conversación por cada visita que nunca baja hasta acá.
+  (function () {
+    const slot = document.getElementById('galo-bot-slot');
+    if (!slot) return;
+
+    const WIDGET_SRC = 'https://intellix.com.ar/widget/widget.js';
+    let started = false;
+
+    function embed() {
+      const panel = document.getElementById('ia-w-panel');
+      const btn = document.getElementById('ia-w-btn');
+      if (!panel || !btn) return false;
+
+      // Abrir dispara _enterChat() (saludo del bot + input listo).
+      if (!panel.classList.contains('open')) btn.click();
+
+      // En mobile el widget bloquea el scroll del body al abrirse: como acá
+      // está empotrado y no se cierra, lo devolvemos enseguida.
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+
+      panel.classList.add('galo-inline');
+      slot.appendChild(panel);
+      slot.classList.add('is-ready');
+      return true;
+    }
+
+    function waitAndEmbed() {
+      let tries = 0;
+      const id = setInterval(function () {
+        if (embed() || ++tries > 60) clearInterval(id);
+      }, 250);
+    }
+
+    function start() {
+      if (started) return;
+      started = true;
+
+      const s = document.createElement('script');
+      s.src = WIDGET_SRC;
+      s.async = true;
+      s.setAttribute('data-api-url', 'https://intellix.com.ar');
+      s.setAttribute(
+        'data-token',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5hbnRfaWQiOiJnYWxvIiwic2NvcGUiOiJ3aWRnZXQiLCJpYXQiOjE3ODU3NjgxODYsImV4cCI6MTc5MzU0NDE4Nn0.v6nVFa342SnzYc_z_8oFySVaJbuzKv8QhxaJWNblzvw'
+      );
+      s.setAttribute('data-title', 'Asistente');
+      s.setAttribute('data-width', '460');
+      s.setAttribute('data-height', '560');
+      s.addEventListener('load', waitAndEmbed);
+      s.addEventListener('error', function () {
+        const ph = document.getElementById('galo-bot-ph');
+        if (ph) ph.textContent = 'No pudimos cargar el asistente. Escribinos por WhatsApp.';
+      });
+      document.body.appendChild(s);
+    }
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { start(); io.disconnect(); }
+          });
+        },
+        { rootMargin: '200px 0px' }
+      );
+      io.observe(slot);
+    } else {
+      start();
+    }
+  })();
+</script>
