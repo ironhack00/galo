@@ -2,6 +2,8 @@
 import TriBg from './TriBg.astro';
 import { site } from '../data/site.js';
 const { heading = 'Acerca de GALO' } = Astro.props;
+import { Picture } from 'astro:assets';
+import { img } from '../data/images.js';
 const f = site.founder;
 ---
 <section class="founder tri-bg section always-dark" id="fundador" aria-labelledby="founder-h">
@@ -11,7 +13,7 @@ const f = site.founder;
 
     <div class="founder__grid">
       <figure class="founder__photo" data-reveal>
-        <img src="/assets/img/fundador-2025.png" alt={`${f.name}, ${f.role} de ${site.name}`} width="654" height="717" loading="lazy" decoding="async" />
+        <Picture src={img('fundador')} alt={`${f.name}, ${f.role} de ${site.name}`} formats={['avif']} fallbackFormat="webp" quality={88} widths={[340, 420, 654]} sizes="(max-width: 820px) 340px, 420px" loading="lazy" decoding="async" />
       </figure>
 
       <div class="founder__text" data-reveal>

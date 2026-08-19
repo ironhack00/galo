@@ -1,11 +1,13 @@
 ---
+import { Picture } from 'astro:assets';
+import { img } from '../data/images.js';
 const { service } = Astro.props;
 const href = `/servicios/${service.slug}/`;
 ---
 <a class="svc" href={href} data-reveal>
   <div class="svc__inner">
     <div class="svc__media">
-      <img src={service.img} alt="" width="240" height="180" loading="lazy" decoding="async" />
+      <Picture src={img(service.img)} alt="" formats={['avif']} fallbackFormat="webp" quality={88} widths={[180, 260, 400]} sizes="180px" loading="lazy" decoding="async" />
     </div>
     <div class="svc__body">
       <h3 class="svc__title">{service.title}</h3>

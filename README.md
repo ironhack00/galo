@@ -34,10 +34,13 @@ cualquier hosting estático:
 ```
 public/
   favicon.svg
-  assets/
-    img/     ← ilustraciones 3D, fondos y foto del fundador (PNG estáticos)
-    icons/   ← íconos SVG (redes, servicios, triángulo, gaviota)
+  og.jpg                ← imagen para compartir en redes (Open Graph)
+  assets/icons/         ← íconos SVG (redes, servicios)
 src/
+  assets/img/           ← ilustraciones 3D y foto del fundador (PNG a color completo).
+                           Se usan con <Picture> de astro:assets: el build genera
+                           AVIF/WebP con srcset. Para agregar una: poner el PNG acá
+                           y referenciarla por nombre (sin extensión) con img('nombre').
   data/site.js          ← TODO el contenido (textos, servicios, blogs, contacto)
   layouts/Base.astro    ← <head>, header, footer, WhatsApp, SEO/OpenGraph
   components/            ← Header, Footer, Hero, ServiceCard, secciones, etc.
@@ -54,8 +57,8 @@ src/
 ## Editar contenido
 
 Casi todo se edita en **`src/data/site.js`**: datos de contacto, redes, servicios,
-pilares, blogs y textos del fundador. Las imágenes viven en `public/assets/` y se
-sirven sin procesar (estáticas).
+pilares, blogs y textos del fundador. Las ilustraciones viven en `src/assets/img/`
+(ver `src/data/images.js`) y se optimizan automáticamente en el build.
 
 ## Notas
 

@@ -1,7 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import ContactSection from '../components/ContactSection.astro';
+import { Picture } from 'astro:assets';
 import { blogs } from '../data/site.js';
+import { img } from '../data/images.js';
 const featured = blogs[0];
 const rest = blogs.slice(1);
 ---
@@ -23,7 +25,7 @@ const rest = blogs.slice(1);
           <span class="plus-info">Leer artículo →</span>
         </div>
         <div class="feature__side" aria-hidden="true">
-          <img src="/assets/img/serv-1.png" alt="" width="260" height="220" loading="lazy" />
+          <Picture src={img('serv-1')} alt="" formats={['avif']} fallbackFormat="webp" quality={88} widths={[220, 440]} sizes="220px" loading="lazy" decoding="async" />
         </div>
       </a>
 

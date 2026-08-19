@@ -1,7 +1,9 @@
 ---
 import Base from '../../layouts/Base.astro';
 import ContactSection from '../../components/ContactSection.astro';
+import { Picture } from 'astro:assets';
 import { blogs, site } from '../../data/site.js';
+import { img } from '../../data/images.js';
 
 export function getStaticPaths() {
   return blogs.map((b) => ({ params: { slug: b.slug }, props: { post: b } }));
@@ -27,7 +29,7 @@ const f = site.founder;
       </div>
 
       <aside class="author" data-reveal>
-        <img src="/assets/img/fundador-2025.png" alt={f.name} width="120" height="120" loading="lazy" />
+        <Picture src={img('fundador')} alt={f.name} formats={['avif']} fallbackFormat="webp" quality={88} widths={[96, 192]} sizes="96px" loading="lazy" decoding="async" />
         <div>
           <h2 class="author__name">{f.name}</h2>
           <p class="author__intro">{f.intro}</p>

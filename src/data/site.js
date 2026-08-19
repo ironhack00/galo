@@ -42,21 +42,21 @@ export const heroSlides = [
     eyebrow: 'Somos una',
     title: 'Consultora de Marketing',
     text: 'Con un enfoque preciso: escucharte, entender tus necesidades y ofrecerte soluciones a medida.',
-    img: '/assets/img/hero-1.png',
+    img: 'hero-1',
     alt: 'Ilustración 3D de un cohete despegando desde un monitor con métricas de marketing',
   },
   {
     eyebrow: 'En GALO Marketing combinamos',
     title: 'Creatividad, Planificación & Estrategia',
     text: 'Para transformar ideas en acciones efectivas.',
-    img: '/assets/img/hero-2.png',
+    img: 'hero-2',
     alt: 'Ilustración 3D de un engranaje verde junto a una lista de tareas verificada',
   },
   {
     eyebrow: '',
     title: 'Hagamos que las cosas pasen',
     text: 'Contáctanos y empecemos a crear estrategias que generan impacto.',
-    img: '/assets/img/hero-3.png',
+    img: 'hero-3',
     alt: 'Ilustración 3D de un plan estratégico con una lámpara de idea',
   },
 ];
@@ -68,7 +68,7 @@ export const services = [
     slug: 'plan-de-marketing',
     title: 'Plan de marketing',
     short: 'Creamos estrategias personalizadas para impulsar tu negocio.',
-    img: '/assets/img/serv-1.png',
+    img: 'serv-1',
     lead: 'Creamos estrategias personalizadas para impulsar tu negocio, definiendo objetivos claros y acciones concretas.',
     listTitle: 'Nos enfocamos en que cada plan sea:',
     points: [
@@ -81,7 +81,7 @@ export const services = [
     slug: 'medios-digitales',
     title: 'Planificación y asesoramiento en medios digitales',
     short: 'Te guiamos en el uso eficiente de plataformas digitales.',
-    img: '/assets/img/serv-2.png',
+    img: 'serv-2',
     lead: 'Te guiamos en el uso eficiente de plataformas digitales. Desde redes sociales hasta campañas publicitarias online.',
     listTitle: 'Diseñamos estrategias que:',
     points: [
@@ -94,7 +94,7 @@ export const services = [
     slug: 'medios-tradicionales',
     title: 'Planificación y asesoramiento en medios tradicionales',
     short: 'Potenciamos tu presencia en medios convencionales.',
-    img: '/assets/img/serv-3.png',
+    img: 'serv-3',
     lead: 'Potenciamos tu presencia en medios convencionales como radio, televisión y prensa gráfica.',
     listTitle: 'Te asesoramos en la elección de:',
     points: [
@@ -107,7 +107,7 @@ export const services = [
     slug: 'investigacion-de-mercado',
     title: 'Investigación y análisis de la competencia',
     short: 'Realizamos estudios detallados del mercado.',
-    img: '/assets/img/serv-4.png',
+    img: 'serv-4',
     lead: 'Realizamos estudios detallados del mercado y tu competencia para identificar oportunidades, fortalezas y áreas de mejora.',
     listTitle: 'Esta información te permitirá:',
     points: [
@@ -120,7 +120,7 @@ export const services = [
     slug: 'eventos-y-marca',
     title: 'Asesoría en eventos y comunicadores de marca',
     short: 'Te acompañamos en la planificación de eventos y acciones que posicionen tu marca.',
-    img: '/assets/img/serv-5.png',
+    img: 'serv-5',
     lead: 'Te acompañamos en la planificación de eventos y acciones que posicionen tu marca. Además, te asesoramos en la selección de comunicadores y embajadores que conecten de manera auténtica y efectiva con tu público objetivo.',
     listTitle: 'Trabajamos en:',
     points: [
@@ -133,7 +133,7 @@ export const services = [
     slug: 'diseno-web',
     title: 'Diseño Web',
     short: 'Sitios web funcionales y atractivos que se adaptan a tu negocio.',
-    img: '/assets/img/serv-6.png',
+    img: 'serv-6',
     lead: 'Desarrollamos sitios web funcionales y atractivos que se adaptan a las necesidades de tu negocio.',
     listTitle: 'Nos enfocamos en brindar:',
     points: [

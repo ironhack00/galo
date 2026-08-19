@@ -3,11 +3,11 @@
 // triángulo invertido con la "M" + wordmark. Se recolorea vía currentColor
 // (hereda var(--text)), así funciona en tema claro y oscuro.
 const { height = 44, href = '/' } = Astro.props;
-// viewBox 468 × 164 → relación de aspecto 2.854
-const width = Math.round(height * 468 / 164);
+// viewBox 468 × 170 → relación de aspecto 2.75
+const width = Math.round(height * 468 / 170);
 ---
 <a class="logo" href={href} aria-label="GALO Marketing — Inicio">
-  <svg class="logo__svg" width={width} height={height} viewBox="16 10 468 164" fill="none" role="img" aria-hidden="true">
+  <svg class="logo__svg" width={width} height={height} viewBox="16 10 468 170" fill="none" role="img" aria-hidden="true">
     <g class="logo__mark" fill="currentColor">
       <path d="M21.81 15.23 H198.05 L109.93 165.36 Z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="miter"/>
       <path d="M151.03 87.32 L126.41 38.94 L109.93 87.32 L93.65 38.94 L68.83 87.32 L93.65 58.8 L109.93 106.89 L126.41 58.63 Z"/>
